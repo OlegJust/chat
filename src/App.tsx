@@ -1,26 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import InfiniteScrollAnimation from './components/InfiniteScrollAnimation'
+import Login from './components/Login'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='bg-gradient-to-r from-indigo-200 from-transparent to-orange-200 flex justify-center items-center h-screen'>
+      <div className='block w-3/5 h-4/5 bg-white rounded-3xl overflow-hidden flex flex-row'>
+        <div className='w-2/4 h-full '>
+          <Login />
+        </div>
+        <div className='w-2/4 h-full flex justify-center rer'>
+          <InfiniteScrollAnimation />
+        </div>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
