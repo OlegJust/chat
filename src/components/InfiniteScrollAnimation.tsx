@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useRef, RefObject } from 'react'
 
 const COLORS = ['#bbf7d0', '#99f6e4', '#bfdbfe', '#ddd6fe', '#f5d0fe', '#fed7aa', '#fee2e2']
 const TAGS: string[] = [
@@ -37,7 +37,7 @@ function InfiniteLoopSlider(props: InfiniteLoopSlider) {
   }
   return (
     <div className='loop-slider' style={divStyle}>
-      <div className='inner'>
+      <div className=' animate-loop-rer inner'>
         {children}
         {children}
       </div>
@@ -48,32 +48,46 @@ function InfiniteLoopSlider(props: InfiniteLoopSlider) {
 type Tag = {
   text: string
 }
-const Tag = ({ text }: Tag) => (
-  <div className='tag'>
-    {text}
-  </div>
-)
+const Tag = ({ text }: Tag) => <div className='tag'>{text}</div>
 
-const InfiniteScrollAnimation = () => (
-  <div className='infiniteScrollAnimation'>
-    <div className='tag-list'>
-      {[...new Array(ROWS)].map((_, i) => (
-        <InfiniteLoopSlider
-          key={i}
-          duration={random(DURATION - 5000, DURATION + 5000)}
-          reverse={i % 2}
-        >
-          {shuffle(TAGS)
-            .slice(0, TAGS_PER_ROW)
-            .map((tag) => (
-              <Tag text={tag} key={tag} />
-            ))}
-        </InfiniteLoopSlider>
-      ))}
-      <div className='fade' />
+function InfiniteScrollAnimation() {
+  const [div1Height, setDiv1Height] = useState<number>(0)
+  const div1Ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (div1Ref && div1Ref.current) {
+      setDiv1Height(div1Ref.current.offsetHeight)
+      const handleResize = () => {
+        setDiv1Height(div1Ref.current.offsetHeight)
+      }
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+    }
+  }, [div1Ref])
+
+  console.log(div1Height)
+
+  return (
+    <div ref={div1Ref as RefObject<HTMLDivElement>} className='infiniteScrollAnimation'>
+      <div className='tag-list'>
+        {[...new Array(Math.floor(div1Height / 52) - 1)].map((_, i) => (
+          <InfiniteLoopSlider
+            key={i}
+            duration={random(DURATION - 5000, DURATION + 5000)}
+            reverse={i % 2}
+          >
+            {shuffle(TAGS)
+              .slice(0, TAGS_PER_ROW)
+              .map((tag) => (
+                <Tag text={tag} key={tag} />
+              ))}
+          </InfiniteLoopSlider>
+        ))}
+        <div className='fade' />
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default InfiniteScrollAnimation
 // ReactDOM.render(<App />, document.body)
