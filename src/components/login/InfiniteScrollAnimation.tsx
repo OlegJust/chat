@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, RefObject } from 'react'
 
-const COLORS = ['#bbf7d0', '#99f6e4', '#bfdbfe', '#ddd6fe', '#f5d0fe', '#fed7aa', '#fee2e2']
 const TAGS: string[] = [
   'Hello',
   'Bye',
@@ -58,7 +57,9 @@ function InfiniteScrollAnimation() {
     if (div1Ref && div1Ref.current) {
       setDiv1Height(div1Ref.current.offsetHeight)
       const handleResize = () => {
-        setDiv1Height(div1Ref.current.offsetHeight)
+        if (div1Ref && div1Ref.current) {
+          setDiv1Height(div1Ref.current.offsetHeight)
+        }
       }
       window.addEventListener('resize', handleResize)
       return () => window.removeEventListener('resize', handleResize)
@@ -69,8 +70,8 @@ function InfiniteScrollAnimation() {
 
   return (
     <div ref={div1Ref as RefObject<HTMLDivElement>} className='infiniteScrollAnimation'>
-      <div className='tag-list'>
-        {[...new Array(Math.floor(div1Height / 52) - 1)].map((_, i) => (
+      <div className='tag-list '>
+        {[...new Array(div1Height === 0 ? ROWS : Math.floor(div1Height / 52) - 1)].map((_, i) => (
           <InfiniteLoopSlider
             key={i}
             duration={random(DURATION - 5000, DURATION + 5000)}
