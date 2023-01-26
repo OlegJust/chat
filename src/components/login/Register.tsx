@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import LoginPage from './LoginPage'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
@@ -11,9 +11,11 @@ function Register() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     setLoading(true)
     e.preventDefault()
+    console.log(e)
+
     const displayName = e.target[0].value
     const email = e.target[1].value
     const password = e.target[2].value
@@ -40,7 +42,7 @@ function Register() {
             })
 
             await setDoc(doc(db, 'userChats', res.user.uid), {})
-            navigate('/')
+            // navigate('/')
           } catch (err) {
             console.log(err)
             setErr(true)

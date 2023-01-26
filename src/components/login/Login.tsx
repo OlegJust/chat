@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, ChangeEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import LoginPage from './LoginPage'
 import { signInWithEmailAndPassword } from 'firebase/auth'
@@ -8,7 +8,7 @@ function Login() {
   const [err, setErr] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
     const email = e.target[0].value
     const password = e.target[1].value
