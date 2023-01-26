@@ -1,5 +1,3 @@
-
-
 .infiniteScrollAnimation {
   display: flex;
   align-items: center;
@@ -8,10 +6,10 @@
 }
 
 .background-main {
-  background-image: linear-gradient(135deg, #cbb0ff, #78e0dd)
+  background-image: linear-gradient(135deg, #cbb0ff, #78bae0);
 }
 .background-login {
-  background-image: linear-gradient(135deg, #402662, #3900A6)
+  background-image: linear-gradient(135deg, #402662, #3900a6);
 }
 .tag-list {
   width: 30rem;
@@ -71,5 +69,3 @@
 //     transform: translateX(-50%);
 //   }
 // }
-
-
