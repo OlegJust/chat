@@ -3,9 +3,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ChatContext } from '../../context/ChatContext'
 import { db } from '../../firebase'
 import Message from './Message'
+import { MessageType } from '../../interface/main'
 
 const Messages = () => {
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<MessageType[]>([])
   const { data } = useContext(ChatContext)
 
   useEffect(() => {
@@ -17,8 +18,6 @@ const Messages = () => {
       unSub()
     }
   }, [data.chatId])
-
-  console.log(messages)
 
   return (
     <div id='messages'>

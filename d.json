@@ -1,0 +1,19 @@
+{
+  "B1Ox1PQr1YUQS0YDRMKlDNpEYZp27YlQaqnWpqPzUsH6zKkbueKxGsD3": {
+    "lastMessage": { "text": "sdfsdddd" },
+    "date": { "seconds": 1674726818, "nanoseconds": 499000000 },
+    "userInfo": {
+      "displayName": "o",
+      "uid": "B1Ox1PQr1YUQS0YDRMKlDNpEYZp2",
+      "photoURL": "https://firebasestorage.googleapis.com/v0/b/chatdemo-fc749.appspot.com/o/o1674693146747?alt=media&token=eef32e06-08f5-4d26-9b3d-518052aa1483"
+    }
+  },
+  "7YlQaqnWpqPzUsH6zKkbueKxGsD37SsqcJ0g9uPkSGy8GK2LisWPiGq2": {
+    "userInfo": {
+      "photoURL": "https://firebasestorage.googleapis.com/v0/b/chatdemo-fc749.appspot.com/o/liza1674127745677?alt=media&token=03eab96b-4d45-4987-b436-73ad85d3a593",
+      "displayName": "liza",
+      "uid": "7SsqcJ0g9uPkSGy8GK2LisWPiGq2"
+    },
+    "date": { "seconds": 1674834782, "nanoseconds": 626000000 }
+  }
+}

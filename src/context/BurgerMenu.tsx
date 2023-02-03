@@ -1,4 +1,4 @@
-import React, { useRef, RefObject, useState } from 'react'
+import React from 'react'
 import { Props } from '../interface/main'
 // import GiHamburgerMenu from 'react-icons/ai';
 import { FaUserCircle, FaUserFriends } from 'react-icons/fa'

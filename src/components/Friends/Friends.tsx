@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, KeyboardEvent } from 'react'
 import BurgerMenu from '../../context/BurgerMenu'
 import {
   collection,
@@ -13,10 +13,15 @@ import {
 } from 'firebase/firestore'
 import { db } from '../../firebase'
 import { AuthContext } from '../../context/AuthContext'
+import { UserType } from '../../interface/main'
+
+interface UserTypeAndEmail extends UserType {
+  email: string
+}
 
 function Friends() {
   const [username, setUsername] = useState('')
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<UserTypeAndEmail | null>(null)
   const [err, setErr] = useState(false)
 
   const { currentUser } = useContext(AuthContext)
@@ -27,46 +32,48 @@ function Friends() {
     try {
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
-        setUser(doc.data())
+        setUser(doc.data() as UserTypeAndEmail)
       })
     } catch (err) {
       setErr(true)
     }
   }
 
-  const handleKey = (e) => {
+  const handleKey = (e: KeyboardEvent) => {
     e.code === 'Enter' && handleSearch()
   }
 
   const handleSelect = async () => {
-    const combinedId =
-      currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid
-    try {
-      const res = await getDoc(doc(db, 'chats', combinedId))
+    if (user) {
+      const combinedId =
+        currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid
+      try {
+        const res = await getDoc(doc(db, 'chats', combinedId))
 
-      if (!res.exists()) {
-        await setDoc(doc(db, 'chats', combinedId), { messages: [] })
+        if (!res.exists()) {
+          await setDoc(doc(db, 'chats', combinedId), { messages: [] })
 
-        await updateDoc(doc(db, 'userChats', currentUser.uid), {
-          [combinedId + '.userInfo']: {
-            uid: user.uid,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-          },
-          [combinedId + '.date']: serverTimestamp(),
-        })
+          await updateDoc(doc(db, 'userChats', currentUser.uid), {
+            [combinedId + '.userInfo']: {
+              uid: user.uid,
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+            },
+            [combinedId + '.date']: serverTimestamp(),
+          })
 
-        await updateDoc(doc(db, 'userChats', user.uid), {
-          [combinedId + '.userInfo']: {
-            uid: currentUser.uid,
-            displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL,
-          },
-          [combinedId + '.date']: serverTimestamp(),
-        })
+          await updateDoc(doc(db, 'userChats', user.uid), {
+            [combinedId + '.userInfo']: {
+              uid: currentUser.uid,
+              displayName: currentUser.displayName,
+              photoURL: currentUser.photoURL,
+            },
+            [combinedId + '.date']: serverTimestamp(),
+          })
+        }
+      } catch (err) {
+        console.log(err)
       }
-    } catch (err) {
-      console.log(err)
     }
 
     setUser(null)

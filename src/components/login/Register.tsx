@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react'
+import React, { useState, FormEvent, ChangeEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import LoginPage from './LoginPage'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
@@ -9,47 +9,47 @@ import { doc, setDoc } from 'firebase/firestore'
 function Register() {
   const [err, setErr] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [displayName, setDisplayName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [file, setFile] = useState<File[]>([])
+
   const navigate = useNavigate()
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true)
     e.preventDefault()
-    console.log(e)
-
-    const displayName = e.target[0].value
-    const email = e.target[1].value
-    const password = e.target[2].value
-    const file = e.target[3].files[0]
-
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password)
 
       const date = new Date().getTime()
       const storageRef = ref(storage, `${displayName + date}`)
+      if (file.length > 0) {
+        const files = file[0]
+        await uploadBytesResumable(storageRef, files).then(() => {
+          getDownloadURL(storageRef).then(async (downloadURL) => {
+            try {
+              await updateProfile(res.user, {
+                displayName,
+                photoURL: downloadURL,
+              })
+              await setDoc(doc(db, 'users', res.user.uid), {
+                uid: res.user.uid,
+                displayName,
+                email,
+                photoURL: downloadURL,
+              })
 
-      await uploadBytesResumable(storageRef, file).then(() => {
-        getDownloadURL(storageRef).then(async (downloadURL) => {
-          try {
-            await updateProfile(res.user, {
-              displayName,
-              photoURL: downloadURL,
-            })
-            await setDoc(doc(db, 'users', res.user.uid), {
-              uid: res.user.uid,
-              displayName,
-              email,
-              photoURL: downloadURL,
-            })
-
-            await setDoc(doc(db, 'userChats', res.user.uid), {})
-            // navigate('/')
-          } catch (err) {
-            console.log(err)
-            setErr(true)
-            setLoading(false)
-          }
+              await setDoc(doc(db, 'userChats', res.user.uid), {})
+              navigate('/')
+            } catch (err) {
+              console.log(err)
+              setErr(true)
+              setLoading(false)
+            }
+          })
         })
-      })
+      }
     } catch (err) {
       setErr(true)
       setLoading(false)
@@ -73,6 +73,7 @@ function Register() {
                 </label>
                 <input
                   type='text'
+                  onChange={(e) => setDisplayName(e.target.value)}
                   className='bg-inherit text-sm border border-blue-100 rounded-lg w-full p-2.5 text-white'
                   placeholder='name@company.com'
                   required
@@ -87,6 +88,7 @@ function Register() {
                 </label>
                 <input
                   type='email'
+                  onChange={(e) => setEmail(e.target.value)}
                   className='bg-inherit text-sm border border-blue-100 rounded-lg w-full p-2.5 text-white'
                   placeholder='name@company.com'
                   required
@@ -104,11 +106,22 @@ function Register() {
                   name='password'
                   id='password'
                   placeholder='••••••••'
+                  onChange={(e) => setPassword(e.target.value)}
                   className='bg-inherit text-sm border border-blue-100 rounded-lg w-full p-2.5 text-white'
                   required
                 />
               </div>
-              <input required style={{ display: 'none' }} type='file' id='file' />
+              <input
+                required
+                onChange={({ currentTarget: { files } }: ChangeEvent<HTMLInputElement>) => {
+                  if (files && files.length) {
+                    setFile((existing) => existing.concat(Array.from(files)))
+                  }
+                }}
+                style={{ display: 'none' }}
+                type='file'
+                id='file'
+              />
               <label htmlFor='file'>
                 <span>Add an avatar</span>
               </label>

@@ -9,7 +9,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 
 const Input = () => {
   const [text, setText] = useState('')
-  const [img, setImg] = useState(null)
+  const [img, setImg] = useState<File | null>(null)
 
   const { currentUser } = useContext(AuthContext)
   const { data } = useContext(ChatContext)
@@ -21,8 +21,10 @@ const Input = () => {
       const uploadTask = uploadBytesResumable(storageRef, img)
 
       uploadTask.on(
+        'state_changed',
         (error) => {
-          //TODO:Handle Error
+          console.log(error)
+          // TODO:Handle Error
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -36,6 +38,7 @@ const Input = () => {
               }),
             })
           })
+          return undefined
         },
       )
     } else {
@@ -80,7 +83,11 @@ const Input = () => {
           type='file'
           style={{ display: 'none' }}
           id='file'
-          onChange={(e) => setImg(e.target.files[0])}
+          onChange={(e) => {
+            if (e.target.files) {
+              setImg(e.target.files[0])
+            }
+          }}
         />
         <label htmlFor='file'>{/* <img src={Img} alt='' /> */}4</label>
         <button onClick={handleSend}>Send</button>

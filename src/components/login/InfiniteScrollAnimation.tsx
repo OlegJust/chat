@@ -66,7 +66,6 @@ function InfiniteScrollAnimation() {
     }
   }, [div1Ref])
 
-  console.log(div1Height)
 
   return (
     <div ref={div1Ref as RefObject<HTMLDivElement>} className='infiniteScrollAnimation'>

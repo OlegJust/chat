@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react'
+import React, { useState, FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import LoginPage from './LoginPage'
 import { signInWithEmailAndPassword } from 'firebase/auth'
@@ -6,17 +6,18 @@ import { auth } from '../../firebase'
 
 function Login() {
   const [err, setErr] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const email = e.target[0].value
-    const password = e.target[1].value
 
     try {
       await signInWithEmailAndPassword(auth, email, password)
       navigate('/')
     } catch (err) {
+      console.log(err)
       setErr(true)
     }
   }
@@ -38,6 +39,8 @@ function Login() {
                 </label>
                 <input
                   type='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className='bg-inherit text-sm border border-blue-100 rounded-lg w-full p-2.5 text-white'
                   placeholder='name@company.com'
                   required
@@ -55,6 +58,8 @@ function Login() {
                   name='password'
                   id='password'
                   placeholder='••••••••'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className='bg-inherit text-sm border border-blue-100 rounded-lg w-full p-2.5 text-white'
                   required
                 />

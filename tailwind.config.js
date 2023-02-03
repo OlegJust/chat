@@ -11,7 +11,7 @@ module.exports = {
             transform: 'translateX(-50%)'
           }
         },
-      },
+      }, 
       animation: {
         'loop-rer': 'loop linear infinite',
       }

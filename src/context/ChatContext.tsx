@@ -1,8 +1,8 @@
 import { createContext, useContext, useReducer } from 'react'
 import { AuthContext } from './AuthContext'
-import { Props } from '../interface/main'
+import { Props, ChatReducerState, ChatReducerAction } from '../interface/main'
 
-export const ChatContext = createContext({} as any)
+export const ChatContext = createContext({})
 
 export const ChatContextProvider = ({ children }: Props) => {
   const { currentUser } = useContext(AuthContext)
@@ -11,7 +11,7 @@ export const ChatContextProvider = ({ children }: Props) => {
     user: {},
   }
 
-  const chatReducer = (state: any, action: any) => {
+  const chatReducer = (state: ChatReducerState, action: ChatReducerAction) => {
     switch (action.type) {
       case 'CHANGE_USER':
         return {
